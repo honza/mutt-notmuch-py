@@ -9,6 +9,7 @@ messages to ``$HOME/.cache/mutt_results``.
 Add this to your muttrc.
 
 ::
+
     macro index / "<enter-command>unset wait_key<enter><shell-escape>mutt-notmuch-py<enter><change-folder-readonly>~/.cache/mutt_results<enter>" \
             "search mail (using notmuch)"
 
