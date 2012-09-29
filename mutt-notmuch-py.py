@@ -21,9 +21,10 @@ Only tested on OSX Lion.
 (c) 2012 - Honza Pokorny
 Licensed under BSD
 """
-import hashlib
+import hashlib, sys
 from commands import getoutput
 from mailbox import Maildir
+from optparse import OptionParser
 
 
 def digest(filename):
@@ -47,13 +48,16 @@ def command(cmd):
 
 
 def main(dest_box):
-
     query = raw_input('Query: ')
+
+    command('mkdir -p %s' % dest_box)
+    command('mkdir -p %s/cur' % dest_box)
+    command('mkdir -p %s/new' % dest_box)
 
     empty_dir(dest_box)
 
     files = command('notmuch search --output=files %s' % query).split('\n')
-    files = [f for f in files if f != '']
+    files = filter(None, files)
 
     data = {}
     messages = []
@@ -66,7 +70,7 @@ def main(dest_box):
             data[sha].append(f)
 
     for sha in data.keys():
-        if len(data[sha]) > 1:
+        if is_gmail and len(data[sha]) > 1:
             messages.append(pick_all_mail(data[sha]))
         else:
             messages.append(data[sha][0])
@@ -76,4 +80,22 @@ def main(dest_box):
 
 
 if __name__ == '__main__':
-    main('~/.cache/mutt_results')
+    global is_gmail
+
+    p = OptionParser("usage: %prog [OPTIONS] [RESULTDIR]")
+    p.add_option('-g', '--gmail', dest='gmail',
+                 action='store_true', default=True,
+                 help='gmail-specific behavior')
+    p.add_option('-G', '--not-gmail', dest='gmail',
+                 action='store_false',
+                 help='gmail-specific behavior')
+    (options, args) = p.parse_args()
+
+    is_gmail = options.gmail
+
+    if args:
+        dest = args[0]
+    else:
+        dest = '~/.cache/mutt_results'
+
+    main(dest.rstrip('/'))
