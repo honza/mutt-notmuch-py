@@ -63,11 +63,14 @@ def main(dest_box):
     messages = []
 
     for f in files:
-        sha = digest(f)
-        if sha not in data.keys():
-            data[sha] = [f]
-        else:
-            data[sha].append(f)
+        try:
+            sha = digest(f)
+            if sha not in data.keys():
+                data[sha] = [f]
+            else:
+                data[sha].append(f)
+        except IOError:
+            print 'File %s does not exist' % f
 
     for sha in data.keys():
         if is_gmail and len(data[sha]) > 1:
