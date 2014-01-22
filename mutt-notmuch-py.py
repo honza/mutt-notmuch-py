@@ -16,15 +16,19 @@ This script overrides the $HOME/.cache/mutt_results each time you run a query.
 
 Install this by adding this file somewhere on your PATH.
 
-Only tested on OSX Lion.
+Tested on OSX Lion and Arch Linux.
 
 (c) 2012 - Honza Pokorny
 Licensed under BSD
 """
-import hashlib, sys
+
+import os
+import hashlib
+
 from commands import getoutput
 from mailbox import Maildir
 from optparse import OptionParser
+from collections import defaultdict
 
 
 def digest(filename):
@@ -47,44 +51,45 @@ def command(cmd):
     return getoutput(cmd)
 
 
-def main(dest_box):
+def main(dest_box, is_gmail):
     query = raw_input('Query: ')
 
-    command('mkdir -p %s' % dest_box)
     command('mkdir -p %s/cur' % dest_box)
     command('mkdir -p %s/new' % dest_box)
 
     empty_dir(dest_box)
 
     files = command('notmuch search --output=files %s' % query).split('\n')
-    files = filter(None, files)
 
-    data = {}
+    data = defaultdict(list)
     messages = []
 
     for f in files:
+        if not f:
+            continue
+
         try:
             sha = digest(f)
-            if sha not in data.keys():
-                data[sha] = [f]
-            else:
-                data[sha].append(f)
+            data[sha].append(f)
         except IOError:
-            print 'File %s does not exist' % f
+            print('File %s does not exist' % f)
 
-    for sha in data.keys():
+    for sha in data:
         if is_gmail and len(data[sha]) > 1:
             messages.append(pick_all_mail(data[sha]))
         else:
             messages.append(data[sha][0])
 
     for m in messages:
-        command('ln -s "%s" %s/cur/' % (m, dest_box))
+        if not m:
+            continue
+
+        target = os.path.join(dest_box, 'cur', os.path.basename(m))
+        if not os.path.exists(target):
+            os.symlink(m, target)
 
 
 if __name__ == '__main__':
-    global is_gmail
-
     p = OptionParser("usage: %prog [OPTIONS] [RESULTDIR]")
     p.add_option('-g', '--gmail', dest='gmail',
                  action='store_true', default=True,
@@ -94,11 +99,10 @@ if __name__ == '__main__':
                  help='gmail-specific behavior')
     (options, args) = p.parse_args()
 
-    is_gmail = options.gmail
-
     if args:
         dest = args[0]
     else:
         dest = '~/.cache/mutt_results'
 
-    main(dest.rstrip('/'))
+    # Use expanduser() so that os.symlink() won't get weirded out by tildes.
+    main(os.path.expanduser(dest).rstrip('/'), options.gmail)
