@@ -4,7 +4,7 @@ description = 'Python version of the mutt-notmuch script'
 long_desc = open('README.rst').read()
 
 setup(
-    name='mutt-notmuch-py',
+    name='mutt-notmuch',
     version='1.0.0',
     url='https://github.com/honza/mutt-notmuch-py',
     install_requires=[],
@@ -16,5 +16,5 @@ setup(
     maintainer_email='me@honza.ca',
     packages=[],
     include_package_data=True,
-    scripts=['mutt-notmuch-py.py'],
+    scripts=['mutt-notmuch-py'],
 )
