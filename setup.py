@@ -1,7 +1,7 @@
 from setuptools import setup
 
 description = 'Python version of the mutt-notmuch script'
-long_desc = open('README.rst').read()
+long_desc = open('README.md').read()
 
 setup(
     name='mutt-notmuch',
