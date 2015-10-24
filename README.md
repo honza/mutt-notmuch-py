@@ -1,6 +1,8 @@
 mutt-notmuch-py
 ===============
 
+[![PyPI version](https://badge.fury.io/py/mutt-notmuch.svg)](https://badge.fury.io/py/mutt-notmuch)
+
 This is a python version of the original mutt-notmuch script.
 
 It will interactively ask you for a search query and then symlink the matching
