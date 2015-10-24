@@ -51,7 +51,9 @@ def command(cmd):
     return getoutput(cmd)
 
 
-def main(dest_box, is_gmail):
+def main(dest_box, options):
+    is_gmail = options.gmail
+    filter_path = options.base_path
     query = raw_input('Query: ')
 
     command('mkdir -p %s/cur' % dest_box)
@@ -66,6 +68,9 @@ def main(dest_box, is_gmail):
 
     for f in files:
         if not f:
+            continue
+
+        if filter_path is not None and filter_path not in f:
             continue
 
         try:
@@ -97,6 +102,8 @@ if __name__ == '__main__':
     p.add_option('-G', '--not-gmail', dest='gmail',
                  action='store_false',
                  help='Normal, non-gmail-specific behavior')
+    p.add_option('-p', '--base-path', dest='base_path',
+                 help='Only include messages in given base path')
     (options, args) = p.parse_args()
 
     if args:
@@ -105,4 +112,4 @@ if __name__ == '__main__':
         dest = '~/.cache/mutt_results'
 
     # Use expanduser() so that os.symlink() won't get weirded out by tildes.
-    main(os.path.expanduser(dest).rstrip('/'), options.gmail)
+    main(os.path.expanduser(dest).rstrip('/'), options)
