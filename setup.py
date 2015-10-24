@@ -5,7 +5,7 @@ long_desc = open('README.rst').read()
 
 setup(
     name='mutt-notmuch',
-    version='1.0.0',
+    version='1.1.0',
     url='https://github.com/honza/mutt-notmuch-py',
     install_requires=[],
     description=description,

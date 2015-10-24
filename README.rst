@@ -1,7 +1,7 @@
 mutt-notmuch-py
 ===============
 
-This is a Gmail-only version of the original mutt-notmuch script.
+This is a python version of the original mutt-notmuch script.
 
 It will interactively ask you for a search query and then symlink the matching
 messages to ``$HOME/.cache/mutt_results``.
@@ -18,7 +18,13 @@ query.
 
 Install this by adding this file somewhere on your PATH.
 
-Only tested on OSX Lion.
+Only tested on OSX Lion, OSX El Capitan.
+
+Options
+-------
+-g        Use gmail specific info (All Mail search)
+-G        Do not use gmail specific info
+-p [path] Limit search results to files with path in the path name
 
 License
 -------
