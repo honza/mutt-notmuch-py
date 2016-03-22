@@ -20,7 +20,7 @@ query.
 
 Install this by adding this file somewhere on your `PATH`.
 
-Only tested on OSX Lion, OSX El Capitan.
+Tested on OSX Lion, OSX El Capitan, Fedora 23, and Arch Linux.
 
 Options
 -------
