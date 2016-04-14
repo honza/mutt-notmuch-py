@@ -25,7 +25,7 @@ Licensed under BSD
 import os
 import hashlib
 
-from commands import getoutput
+from commands import getoutput, mkarg
 from mailbox import Maildir
 from optparse import OptionParser
 from collections import defaultdict
@@ -61,7 +61,7 @@ def main(dest_box, options):
 
     empty_dir(dest_box)
 
-    files = command('notmuch search --output=files %s' % query).split('\n')
+    files = command('notmuch search --output=files %s' % mkarg(query)).split('\n')
 
     data = defaultdict(list)
     messages = []
