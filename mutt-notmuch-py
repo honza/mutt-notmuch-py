@@ -25,14 +25,24 @@ Licensed under BSD
 import os
 import hashlib
 
-from commands import getoutput, mkarg
 from mailbox import Maildir
 from optparse import OptionParser
 from collections import defaultdict
+import readline
+
+try:
+    from commands import getoutput
+except ImportError:
+    from subprocess import getoutput
+
+try:
+    input = raw_input
+except NameError:
+    pass
 
 
 def digest(filename):
-    with open(filename) as f:
+    with open(filename, 'rb') as f:
         return hashlib.sha1(f.read()).hexdigest()
 
 
@@ -54,14 +64,14 @@ def command(cmd):
 def main(dest_box, options):
     is_gmail = options.gmail
     filter_path = options.base_path
-    query = raw_input('Query: ')
+    query = input('Query: ')
 
     command('mkdir -p %s/cur' % dest_box)
     command('mkdir -p %s/new' % dest_box)
 
     empty_dir(dest_box)
 
-    files = command('notmuch search --output=files %s' % mkarg(query)).split('\n')
+    files = command('notmuch search --output=files {}'.format(query)).split('\n')
 
     data = defaultdict(list)
     messages = []
