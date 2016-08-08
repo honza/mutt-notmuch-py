@@ -121,5 +121,9 @@ if __name__ == '__main__':
     else:
         dest = '~/.cache/mutt_results'
 
-    # Use expanduser() so that os.symlink() won't get weirded out by tildes.
-    main(os.path.expanduser(dest).rstrip('/'), options)
+    try:
+        # Use expanduser() so that os.symlink() won't get weirded out by
+        # tildes.
+        main(os.path.expanduser(dest).rstrip('/'), options)
+    except KeyboardInterrupt:
+        pass
