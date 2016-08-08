@@ -22,6 +22,7 @@ Tested on OSX Lion, OSX El Capitan, Fedora 23, and Arch Linux.
 Licensed under BSD
 """
 
+from __future__ import print_function
 import os
 import hashlib
 
