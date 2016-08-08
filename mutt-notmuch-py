@@ -25,11 +25,14 @@ Licensed under BSD
 from __future__ import print_function
 import os
 import hashlib
+import sys
 
 from mailbox import Maildir
 from optparse import OptionParser
 from collections import defaultdict
 import readline
+
+VERSION = '1.2.0'
 
 try:
     from commands import getoutput
@@ -115,12 +118,18 @@ if __name__ == '__main__':
                  help='Normal, non-gmail-specific behavior')
     p.add_option('-p', '--base-path', dest='base_path',
                  help='Only include messages in given base path')
+    p.add_option('-v', '--version', dest='version', action='store_true',
+                 help='Show version')
     (options, args) = p.parse_args()
 
     if args:
         dest = args[0]
     else:
         dest = '~/.cache/mutt_results'
+
+    if options.version:
+        print(VERSION)
+        sys.exit(0)
 
     try:
         # Use expanduser() so that os.symlink() won't get weirded out by
