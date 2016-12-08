@@ -68,7 +68,12 @@ def command(cmd):
 def main(dest_box, options):
     is_gmail = options.gmail
     filter_path = options.base_path
+    history_path = options.history_path
+    if history_path and os.path.exists(history_path):
+        readline.read_history_file(history_path)
     query = input('Query: ')
+    if history_path:
+      readline.write_history_file(history_path)
 
     command('mkdir -p %s/cur' % dest_box)
     command('mkdir -p %s/new' % dest_box)
@@ -118,6 +123,8 @@ if __name__ == '__main__':
                  help='Normal, non-gmail-specific behavior')
     p.add_option('-p', '--base-path', dest='base_path',
                  help='Only include messages in given base path')
+    p.add_option('--history-path', dest='history_path',
+                 help='Save/restore query history to given path')
     p.add_option('-v', '--version', dest='version', action='store_true',
                  help='Show version')
     (options, args) = p.parse_args()
