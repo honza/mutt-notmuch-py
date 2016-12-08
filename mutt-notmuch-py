@@ -65,10 +65,17 @@ def command(cmd):
     return getoutput(cmd)
 
 
+def normalize(path):
+    if path:
+      # Use expanduser() so that os.symlink() won't get weirded out by
+      # tildes.
+      return os.path.expanduser(path).rstrip('/')
+
+
 def main(dest_box, options):
     is_gmail = options.gmail
     filter_path = options.base_path
-    history_path = options.history_path
+    history_path = normalize(options.history_path)
     if history_path and os.path.exists(history_path):
         readline.read_history_file(history_path)
     query = input('Query: ')
@@ -139,8 +146,6 @@ if __name__ == '__main__':
         sys.exit(0)
 
     try:
-        # Use expanduser() so that os.symlink() won't get weirded out by
-        # tildes.
-        main(os.path.expanduser(dest).rstrip('/'), options)
+        main(normalize(dest), options)
     except KeyboardInterrupt:
         pass
