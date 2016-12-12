@@ -29,6 +29,8 @@ Options
 -g        Use gmail specific info (All Mail search)
 -G        Do not use gmail specific info
 -p [path] Limit search results to files with path in the path name
+--history-path=[path]
+          Save/Restore query history to given path
 ```
 
 License
