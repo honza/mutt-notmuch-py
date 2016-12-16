@@ -25,6 +25,12 @@ Licensed under BSD
 from __future__ import print_function
 import os
 import hashlib
+
+try:
+    from shlex import quote
+except ImportError:
+    from pipes import quote
+
 import sys
 
 from mailbox import Maildir
@@ -87,7 +93,7 @@ def main(dest_box, options):
 
     empty_dir(dest_box)
 
-    files = command('notmuch search --output=files {}'.format(query)).split('\n')
+    files = command('notmuch search --output=files {}'.format(quote(query))).split('\n')
 
     data = defaultdict(list)
     messages = []
