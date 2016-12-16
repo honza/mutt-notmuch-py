@@ -28,7 +28,7 @@ import hashlib
 
 try:
     from shlex import quote
-except:
+except ImportError:
     from pipes import quote
 
 import sys
